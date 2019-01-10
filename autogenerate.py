@@ -2,6 +2,10 @@
 # 1. Image auto color
 # 2. Export as bmp with only 2 color
 # 3. different dither
+widthheightratio = 1.307
+outputpixelWidth = 133
+outputpixelHeight = 114
+
 
 from win32com.client import Dispatch
 import sys, os
@@ -23,11 +27,18 @@ outputName = pathOfScript +"\outputfile.bmp"
 #C:\Users\loggc\Desktop\importfile.jpg'
 doc = app.Open(fileName)
 
-if ( doc.width/doc.height >= 133/114):
-    doc.ResizeImage(133)
+
+
+if ( doc.width/doc.height >= outputpixelWidth*widthheightratio/outputpixelHeight):
+    doc.ResizeImage(outputpixelWidth,int(doc.height*outputpixelWidth/doc.width* widthheightratio ))
 else:
-    doc.ResizeImage(doc.width/doc.height*114)
-doc.ResizeCanvas(133, 114)
+    doc.ResizeImage(int((doc.width*outputpixelHeight/doc.height)/widthheightratio), outputpixelHeight)
+
+#  if ( doc.width/doc.height >= 133/114):
+#    doc.ResizeImage(133)
+#else:
+#    doc.ResizeImage(doc.width/doc.height*114)
+doc.ResizeCanvas(outputpixelWidth, outputpixelHeight)
 
 
 #doc.SaveAs()
@@ -41,6 +52,7 @@ psSaveForWeb =2          # from enum PsExportType
 
 exportconfig = Dispatch("Photoshop.ExportOptionsSaveForWeb")
 
+#exportconfig.DitherAmount = 50
 exportconfig.Colors = 2
 
 doc.Export(outputName,psSaveForWeb,exportconfig)
