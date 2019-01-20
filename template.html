@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<body>
+        <input
+        accept="image/*"
+        className={classes.input}
+        id="flat-button-file"
+        multiple
+        type="file"
+        onInput={this.inputEvent}
+      ></input>
+      
+      <canvas id="canvasOutput" ></canvas>
+
+
+    <div class="slidecontainer">
+        Threshold
+        <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+    </div>
+    <div class="slidecontainer">
+        Contrast
+            <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+        </div>
+        <div class="slidecontainer">
+            Brightness
+        <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+        </div>
+
+</body>
+</html>

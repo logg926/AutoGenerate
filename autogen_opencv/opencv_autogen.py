@@ -12,6 +12,12 @@ import Edge_detection
 # widthheightratio = 1.307
 # outputpixelWidth = 133
 # outputpixelHeight = 114
+
+
+def AutoGenerate(inputname ,outputname, threshhold,brightness=0,contrast = 30,widthheightratio = 1.307,outputpixelWidth=133,outputpixelHeight=114 ):
+
+     my_config = Config(widthheightratio,outputpixelWidth,outputpixelHeight)
+     
 inputname = 'importfile.jpg'
 
 outputname = 'outputfile.bmp'
@@ -27,7 +33,6 @@ output_options = [('opecv_test4.bmp',0,30),('opecv_test5.bmp',0,-30)]
 
 
 # step0 make the setting
-my_config = Config(1.307,133,114)
 
 #step1 read the file
 img = cv2.imread(inputname)
