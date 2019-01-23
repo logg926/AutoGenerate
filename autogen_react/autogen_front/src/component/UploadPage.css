@@ -1,0 +1,29 @@
+.button-container{
+    justify-content: center;
+    flex-direction: row ;
+    text-align: center;
+    direction: center;
+    position: fixed;
+    top:0px;
+    bottom:0px;
+    left: 0px;
+    right: 0px;
+}
+.component-upload-button {
+    /* background-color: #858694; */
+    /* display: block; */
+    flex-direction: row;
+    flex-wrap: wrap;
+    flex: 2 0 auto;
+    display: flex;
+    max-width: 200px;
+    width:100%;
+    position: absolute;
+    top: 50%;
+    /* margin:auto; */
+    /* justify-content: space-evenly; */
+  }
+
+  .input {
+    display: none;
+  }

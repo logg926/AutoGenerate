@@ -1,0 +1,16 @@
+.img{
+    object-fit: contain;
+    width:100% ;
+}
+.place-holder{
+    height:16px;
+}
+
+.slider-container{
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+}
+.button{
+    
+}

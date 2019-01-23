@@ -3,11 +3,11 @@ from flask_uploads import UploadSet, configure_uploads, IMAGES
 from flask_restful import Api, Resource, reqparse
 from werkzeug.utils import secure_filename
 from AutoGenerate import AutoGenerate
-
+from flask_cors import CORS
 ##TODO: create custom name timestamp on filename
 app = Flask(__name__)
 api = Api(app)
-
+CORS(app)
 # app.secret_key = b'f_alfa4Q8z\n\xec]/'
 photos = UploadSet('photos', IMAGES)
 
@@ -18,20 +18,23 @@ configure_uploads(app, photos)
 #send with POST request and photo 
 #response with json
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
 def upload():
-    if request.method == 'POST' and 'photo' in request.files:
-        thisfile = request.files['photo']
-        filename = photos.save(thisfile, name = secure_filename(thisfile.filename) )
-        AutoGenerate(inputpath = app.config['UPLOADED_PHOTOS_DEST']+'/'+filename,outputpath = app.config['CHANGED_PHOTOS_DEST']+'/'+filename)
-            # def AutoGenerate(inputpath ='static/img/importfile.jpg',outputname = 'static/trans/outputfile.bmp',threshhold = 0,brightness=0,contrast = 0,widthheightratio = 1.307,outputpixelWidth=133,outputpixelHeight=114 ):
-        return jsonify({ "success": True ,'id':filename ,'url': url_for('transformed_file',filename=filename)})
-        # except:
+    # if request.method == 'POST' and 'photo' in request.files:
+    #     thisfile = request.files['photo']
+    #     filename = photos.save(thisfile, name = secure_filename(thisfile.filename) )
+    #     AutoGenerate(inputpath = app.config['UPLOADED_PHOTOS_DEST']+'/'+filename,outputpath = app.config['CHANGED_PHOTOS_DEST']+'/'+filename)
+    #         # def AutoGenerate(inputpath ='static/img/importfile.jpg',outputname = 'static/trans/outputfile.bmp',threshhold = 0,brightness=0,contrast = 0,widthheightratio = 1.307,outputpixelWidth=133,outputpixelHeight=114 ):
+    #     return jsonify({ "success": True ,'id':filename ,'url': url_for('transformed_file',filename=filename)}),201
+    #     # except:
         #     return jsonify({ "success": False })
 
         # return jsonify({'url': url_for('uploaded_file',filename=filename))})
         # return filename
     return render_template('upload.html')
+
+
+
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
@@ -75,12 +78,32 @@ class ShowResult(Resource):
         parser.add_argument("url")
         args = parser.parse_args()
         #send this to the machine
-
+        response = {
+            "id": id,
+            "success": False
+            }
         return response, 201
         
-        
+class Uploadori(Resource):
+    def post(self):
+        print(request.headers)
+        if 'photo' not in request.files:
+            response = {"success":False,'message':'No file part'}
+            return response,500
+        if request.method == 'POST' and 'photo' in request.files:
+            thisfile = request.files['photo']
+            filename = photos.save(thisfile, name = secure_filename(thisfile.filename) )
+            AutoGenerate(inputpath = app.config['UPLOADED_PHOTOS_DEST']+'/'+filename,outputpath = app.config['CHANGED_PHOTOS_DEST']+'/'+filename)
+            # def AutoGenerate(inputpath ='static/img/importfile.jpg',outputname = 'static/trans/outputfile.bmp',threshhold = 0,brightness=0,contrast = 0,widthheightratio = 1.307,outputpixelWidth=133,outputpixelHeight=114 ):
+            response = { "success": True ,'id':filename ,'url': url_for('transformed_file',filename=filename)}
+            return response,201
+        response = {"success":False,'message':'Not correct file type'}
+        return response, 500   
 
+api.add_resource(Uploadori,"/")
 api.add_resource(ShowResult, "/<string:id>")
+
+
 
 if __name__ == '__main__':
 	app.run(debug=True)
