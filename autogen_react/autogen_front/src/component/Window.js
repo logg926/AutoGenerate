@@ -17,6 +17,7 @@ const styles = theme => ({
     },
 });
 
+const link = "http://127.0.0.1:5000"
 
 class Window extends React.Component {
     constructor(props) {
@@ -24,11 +25,13 @@ class Window extends React.Component {
         this.state = {
             url:'',
             value: 0,
-            modifyLoading: false
+            modifyLoading: false,
+            id : ''
         }
         this.changeURL = this.changeURL.bind(this)
         this.changeValue = this.changeValue.bind(this)
         this.finishLoading =this.finishLoading.bind(this)
+        this.startLoading = this.startLoading.bind(this)
       }
     handleChange = (event, value) => {
         this.setState({ value });
@@ -43,11 +46,15 @@ class Window extends React.Component {
         this.setState({value,modifyLoading: true})
 
     }
+    startLoading(){
 
+        this.setState({modifyLoading: true})
+    }
     finishLoading(){
 
         this.setState({modifyLoading: false})
     }
+    
 
     render() {
         //   console.log(this.props.theme);
@@ -80,9 +87,25 @@ class Window extends React.Component {
                 > */}
                     {/* <TabContainer dir={theme.direction}> */}
                     <div className='theview'>
-                {value === 0 && <UploadPage changeValue={this.changeValue} change={this.changeURL} finishLoading={this.finishLoading}/>}
-                {value === 1 && <EditPage url={this.state.url} loading={this.state.modifyLoading} />}
-                {value === 2 && <ConfirmPage/>}
+                {value === 0 && <UploadPage 
+                    setId = {(id)=>{
+                        this.setState({id})
+                    }}
+                    link={link}changeValue={this.changeValue} 
+                    change={this.changeURL} 
+                    finishLoading={this.finishLoading}
+                />}
+               
+                {value === 1 && <EditPage 
+                    id={this.state.id}
+                    setLoading={this.startLoading} 
+                    setFinishLoading={this.finishLoading} 
+                    link={link} 
+                    url={this.state.url} 
+                    change={this.changeURL} 
+                    loading={this.state.modifyLoading} 
+                />}
+                {value === 2 && <ConfirmPage link={link}/>}
                 </div>
                     
                     

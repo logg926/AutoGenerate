@@ -19,24 +19,25 @@ def AutoGenerate(inputpath ='static/img/importfile.jpg',outputpath = 'static/tra
      my_config = Config(widthheightratio,outputpixelWidth,outputpixelHeight)
      print(inputpath)
      img = cv2.imread(inputpath)
-
      img = cv2.fastNlMeansDenoisingColored(img,None,10,10,7,21)
-     
      img = maketoratio(img,my_config)
-     # img =  cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-
-
      img = makebacktoratiopreview(img,my_config)
      img = apply_brightness_contrast(img,brightness,contrast)
      cv2_im = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
-     # ret,img = cv2.threshold(img,127,255,cv2.THRESH_BINARY)
      pil_im = Image.fromarray(cv2_im)
      pil_im.convert('1').save(outputpath)
-
      cv2.destroyAllWindows()
      return True
 
-
+def ApplyRatio(inputpath ='static/img/importfile.jpg',outputpath = 'static/export/exportfile.bmp',threshhold = 0,brightness=0,contrast = 0,widthheightratio = 1.307,outputpixelWidth=133,outputpixelHeight=114 ):
+     my_config = Config(widthheightratio,outputpixelWidth,outputpixelHeight)
+     img = cv2.imread(inputpath)
+     img = maketoratio(img,my_config)
+     cv2.imwrite(outputpath,img)
+     cv2.destroyAllWindows()
+     return
+AutoGenerate()
+ApplyRatio()
 # AutoGenerate()
 
 # inputname = 'importfile.jpg'

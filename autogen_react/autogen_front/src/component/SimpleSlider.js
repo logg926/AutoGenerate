@@ -19,22 +19,26 @@ class SimpleSlider extends React.Component {
 
   };
 
-  handleChange = (event, value) => {
-    this.setState({ value });
-  };
+  // handleChange = (event, value) => {
+  //   this.setState({ value });
+  // };
 
   render() {
     const { classes } = this.props;
     const { value } = this.state;
+    console.log(value)
 
     return (
       <div className={classes.root}>
-        <Typography id="label">Slider label</Typography>
+        <Typography id="label">{this.props.text}</Typography>
         <Slider
           classes={{ container: classes.slider }}
-          value={value}
+          value={this.props.value}
           aria-labelledby="label"
-          onChange={this.handleChange}
+          onChange = {this.props.setter}
+          onDragEnd ={this.props.onDragEnd}
+          min= {this.props.min}
+          max={this.props.max}
         />
       </div>
     );

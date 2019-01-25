@@ -4,6 +4,7 @@ from flask_restful import Api, Resource, reqparse
 from werkzeug.utils import secure_filename
 from AutoGenerate import AutoGenerate
 from flask_cors import CORS
+from time import strftime
 ##TODO: create custom name timestamp on filename
 app = Flask(__name__)
 api = Api(app)
@@ -50,19 +51,22 @@ class ShowResult(Resource):
     def patch(self, id):
         
         parser = reqparse.RequestParser()
-        parser.add_argument("id", required=True,help="id cannot be blank!")
+        # parser.add_argument("id", required=True,help="id cannot be blank!")
         parser.add_argument("contrast")
         parser.add_argument("brightness")
         parser.add_argument("threshold")
         args = parser.parse_args()
-        flag = AutoGenerate(inputpath = app.config['UPLOADED_PHOTOS_DEST']+'/'+id,outputpath = app.config['CHANGED_PHOTOS_DEST']+'/'+id,threshhold = args['threshold'],brightness=args['brightness'],contrast = args['contrast'])
+        newId = strftime("%a%d%b%Y%H%M%S")+id
+        flag = AutoGenerate(inputpath = app.config['UPLOADED_PHOTOS_DEST']+'/'+id,outputpath = app.config['CHANGED_PHOTOS_DEST']+'/'+newId,threshhold = int(float(args['threshold'])),brightness= int(float(args['brightness'])),contrast = int(float(args['contrast'])))
         
         if flag:
             response = {
             "id": id,
             "success": True,
-            "url": url_for('transformed_file',filename=id)
+            "url": url_for('transformed_file',filename=newId)
             }
+            # response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+            # response.cache_control.no_cache = True
             return response, 200
         else:
             response = {
@@ -72,12 +76,9 @@ class ShowResult(Resource):
             return response, 500
     def post(self, id):
         parser = reqparse.RequestParser()
-        parser.add_argument("id", required=True,help="id cannot be blank!")
         parser.add_argument("flag")
-        args = parser.parse_args()
         parser.add_argument("url")
         args = parser.parse_args()
-        #send this to the machine
         response = {
             "id": id,
             "success": False
@@ -86,13 +87,19 @@ class ShowResult(Resource):
         
 class Uploadori(Resource):
     def post(self):
-        print(request.headers)
+        # print(request.headers)
         if 'photo' not in request.files:
             response = {"success":False,'message':'No file part'}
             return response,500
         if request.method == 'POST' and 'photo' in request.files:
             thisfile = request.files['photo']
-            filename = photos.save(thisfile, name = secure_filename(thisfile.filename) )
+            print(thisfile.filename)
+            try:
+                filename = photos.save(thisfile, name = secure_filename(thisfile.filename) )
+            except:
+                response = {"success":False,'message':'Upload Not Allowed'}
+                print("error")
+                return response, 500 
             AutoGenerate(inputpath = app.config['UPLOADED_PHOTOS_DEST']+'/'+filename,outputpath = app.config['CHANGED_PHOTOS_DEST']+'/'+filename)
             # def AutoGenerate(inputpath ='static/img/importfile.jpg',outputname = 'static/trans/outputfile.bmp',threshhold = 0,brightness=0,contrast = 0,widthheightratio = 1.307,outputpixelWidth=133,outputpixelHeight=114 ):
             response = { "success": True ,'id':filename ,'url': url_for('transformed_file',filename=filename)}

@@ -30,7 +30,7 @@ class UploadPage extends React.Component {
         //     // handle error
         //     console.log(error);
         //   })
-        let theLink = "http://127.0.0.1:5000"
+        let theLink = this.props.link
         let theURL = ""
         fetch(theLink,{
             method: "POST",
@@ -40,6 +40,7 @@ class UploadPage extends React.Component {
           })
           .then((myJson)=> {
             theURL=theLink+myJson.url
+            this.props.setId(myJson.id)
             this.props.change(theURL)
             this.props.finishLoading()
           }).catch(function (error) {
