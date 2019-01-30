@@ -5,11 +5,12 @@ from werkzeug.utils import secure_filename
 from AutoGenerate import AutoGenerate,Export
 from flask_cors import CORS
 from time import strftime
+import os
 ##TODO: create custom name timestamp on filename
 application = Flask(__name__)
 app = application #required by eb apache
 api = Api(app)
-CORS(app)
+# CORS(app)
 # CORS(app)
 # app.secret_key = b'f_alfa4Q8z\n\xec]/'
 photos = UploadSet('photos', IMAGES)
@@ -38,7 +39,9 @@ def upload():
         # return filename
     return render_template('index.html')
 
-
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'),'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 
 @app.route('/uploads/<filename>')
