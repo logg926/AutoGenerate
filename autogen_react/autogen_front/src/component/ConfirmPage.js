@@ -3,15 +3,14 @@ import './ConfirmPage.css'
 import Paper from './Paper'
 import TabContainer from './TabContainer'
 
-const id = 'HY_hihi'
 class ConfirmPage extends Component {
   render() {
     return (
       <TabContainer>
-      <Paper header="Id:" >
+      <Paper header="Your Program's Id:" >
       Please Screen Capture this Confirm Page <br></br>
       <Paper header={
-          id
+          this.props.exportCode
 
       } />
       </Paper>

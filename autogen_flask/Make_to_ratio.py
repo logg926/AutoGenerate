@@ -23,7 +23,13 @@ def maketoratio (imgin,config):
     outputpixelHeight = config.outputpixelHeight
 
     if (  width/ height >= outputpixelWidth*widthheightratio/outputpixelHeight):
-        img = cv2.resize(img,(outputpixelWidth,int( height*outputpixelWidth/ width* widthheightratio )))
+        realheight = int( height*outputpixelWidth/ width* widthheightratio )
+        realwidth = outputpixelWidth
+        img = cv2.resize(img,(realwidth,realheight))
+        return (img,realwidth,realheight)
     else:
-        img = cv2.resize(img,(int(( width*outputpixelHeight/ height)/widthheightratio), outputpixelHeight))
-    return img
+        realheight = outputpixelHeight
+        realwidth = int(( width*outputpixelHeight/ height)/widthheightratio)
+        img = cv2.resize(img,(realwidth,realheight))
+        return (img,realwidth,realheight)
+

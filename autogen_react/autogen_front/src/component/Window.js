@@ -17,7 +17,9 @@ const styles = theme => ({
     },
 });
 
-const link = "http://127.0.0.1:5000"
+// const link = "http://127.0.0.1:5000/"
+// const link = "http://127.0.0.1:8000"
+const link = ""
 
 class Window extends React.Component {
     constructor(props) {
@@ -26,7 +28,10 @@ class Window extends React.Component {
             url:'',
             value: 0,
             modifyLoading: false,
-            id : ''
+            id : '',
+            newid: '',
+            exportCode: "",
+            exporting: false
         }
         this.changeURL = this.changeURL.bind(this)
         this.changeValue = this.changeValue.bind(this)
@@ -74,7 +79,7 @@ class Window extends React.Component {
                     >
                         <Tab label="Upload" />
                         <Tab label="Modify" disabled={!this.state.url} />
-                        <Tab label="Export" disabled={!this.state.url}/>
+                        <Tab label="Export" disabled={!this.state.url||!this.state.newid}/>
                         
                     </Tabs>
                 </AppBar>
@@ -91,9 +96,11 @@ class Window extends React.Component {
                     setId = {(id)=>{
                         this.setState({id})
                     }}
-                    link={link}changeValue={this.changeValue} 
+                    link={link}
+                    changeValue={this.changeValue} 
                     change={this.changeURL} 
                     finishLoading={this.finishLoading}
+                    setNewId = {(newid)=>{this.setState({newid:newid})}}
                 />}
                
                 {value === 1 && <EditPage 
@@ -104,8 +111,14 @@ class Window extends React.Component {
                     url={this.state.url} 
                     change={this.changeURL} 
                     loading={this.state.modifyLoading} 
+                    setNewId = {(newid)=>{this.setState({newid:newid})}}
+                    newid = {this.state.newid}
+                    setExportCode= {(hashedid)=>{this.setState({exportCode:hashedid})}}
+                    changeValue={(value)=>{this.setState({value})}} 
+                    setExporting={()=>{this.setState({exporting: true})}}
+                    setFinishExporting={()=>{this.setState({exporting: false})}}
                 />}
-                {value === 2 && <ConfirmPage link={link}/>}
+                {value === 2 && <ConfirmPage link={link} exportCode ={this.state.exportCode}/>}
                 </div>
                     
                     

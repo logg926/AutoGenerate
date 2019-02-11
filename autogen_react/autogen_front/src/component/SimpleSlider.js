@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/lab/Slider';
+// import Slider from 'rc-slider';
 
 const styles = {
   root: {
@@ -37,6 +38,7 @@ class SimpleSlider extends React.Component {
           aria-labelledby="label"
           onChange = {this.props.setter}
           onDragEnd ={this.props.onDragEnd}
+          onDragStop = {this.props.onDragEnd}
           min= {this.props.min}
           max={this.props.max}
         />

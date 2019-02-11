@@ -9,6 +9,9 @@ from PIL import Image
 from Apply_brightness_contrast import apply_brightness_contrast
 from Make_to_ratio import Config, maketoratio , makebacktoratiopreview
 import Edge_detection
+
+import shutil
+import os
 # widthheightratio = 1.307
 # outputpixelWidth = 133
 # outputpixelHeight = 114
@@ -20,24 +23,30 @@ def AutoGenerate(inputpath ='static/img/importfile.jpg',outputpath = 'static/tra
      print(inputpath)
      img = cv2.imread(inputpath)
      img = cv2.fastNlMeansDenoisingColored(img,None,10,10,7,21)
-     img = maketoratio(img,my_config)
-     img = makebacktoratiopreview(img,my_config)
+     (img,realwidth,realheight) = maketoratio(img,my_config)
+     # img = makebacktoratiopreview(img,my_config)
      img = apply_brightness_contrast(img,brightness,contrast)
      cv2_im = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
      pil_im = Image.fromarray(cv2_im)
      pil_im.convert('1').save(outputpath)
      cv2.destroyAllWindows()
-     return True
+     return (True,realwidth,realheight,widthheightratio)
 
-def ApplyRatio(inputpath ='static/img/importfile.jpg',outputpath = 'static/export/exportfile.bmp',threshhold = 0,brightness=0,contrast = 0,widthheightratio = 1.307,outputpixelWidth=133,outputpixelHeight=114 ):
+def ApplyRatio(inputpath ='static/trans/outputfile.bmp',outputpath = 'static/export/exportfile.bmp',threshhold = 0,brightness=0,contrast = 0,widthheightratio = 1.307,outputpixelWidth=133,outputpixelHeight=114 ):
      my_config = Config(widthheightratio,outputpixelWidth,outputpixelHeight)
      img = cv2.imread(inputpath)
      img = maketoratio(img,my_config)
-     cv2.imwrite(outputpath,img)
+     pil_im = Image.fromarray(img)
+     pil_im.convert('1').save(outputpath)
      cv2.destroyAllWindows()
      return
-AutoGenerate()
-ApplyRatio()
+
+def Export(inputpath ='static/trans/outputfile.bmp',outputpath = 'static/export/exportfile.bmp',threshhold = 0,brightness=0,contrast = 0,widthheightratio = 1.307,outputpixelWidth=133,outputpixelHeight=114 ):
+     os.rename(inputpath,outputpath+str(hash(id))+'.bmp')
+     return 
+
+# AutoGenerate()
+# Export()
 # AutoGenerate()
 
 # inputname = 'importfile.jpg'

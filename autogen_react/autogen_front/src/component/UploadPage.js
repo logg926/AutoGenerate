@@ -7,6 +7,7 @@ import Axios from 'axios';
 class UploadPage extends React.Component {
     constructor(props) {
         super(props);
+        
         this.inputEvent = this.inputEvent.bind(this);
       }
 
@@ -14,6 +15,7 @@ class UploadPage extends React.Component {
 
     }
     inputEvent = (e) => {
+        console.log(12345)
         const datae = new FormData();
         datae.append('photo',e.target.files[0])
         // const config = {
@@ -32,6 +34,8 @@ class UploadPage extends React.Component {
         //   })
         let theLink = this.props.link
         let theURL = ""
+
+        this.props.changeValue(1)
         fetch(theLink,{
             method: "POST",
             body: datae
@@ -43,12 +47,14 @@ class UploadPage extends React.Component {
             this.props.setId(myJson.id)
             this.props.change(theURL)
             this.props.finishLoading()
+            this.props.setNewId(myJson.newid)
+            
           }).catch(function (error) {
                 // handle error
                 console.log(error);
               })
-              console.log(theURL)
-            this.props.changeValue(1)
+
+        console.log(theURL)
         //     function(res){ return res.json(); })
         // .then(function(data){ alert( JSON.stringify( data ) ) }).catch(function (error) {
         //     console.log(error);
@@ -71,10 +77,11 @@ class UploadPage extends React.Component {
             accept="image/*"
             className='input'
             id="flat-button-file"
-            multiple
             type="file"
-            onInput={this.inputEvent}
-          />
+            onChange={this.inputEvent}
+          /> 
+          {/* <input type="file" 
+            id="flat-button-file" class="nodisplay" name="files[]" multiple="" accept=".jpg,.jpeg,.png,.gif,.apng,.tiff,.tif,.bmp"></input> */}
           <label htmlFor="flat-button-file">
           
 <Button component="span" className = 'component-upload-button' variant="contained" color="primary" >Upload</Button>

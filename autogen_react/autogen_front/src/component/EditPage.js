@@ -21,7 +21,32 @@ class EditPage extends React.Component {
     this.threshold_setter=this.threshold_setter.bind(this)
     this.brightness_setter=this.brightness_setter.bind(this)
     this.updatephoto=this.updatephoto.bind(this)
+    this.exportPhoto= this.exportPhoto.bind(this)
   }
+
+  exportPhoto=(e)=>{
+  // fetch newid
+  const datae = new FormData();
+  datae.append('newid', this.props.newid)
+  let theLink = this.props.link+'/'+this.props.id
+  let theURL = ""
+  fetch(theLink,{
+    method: "POST",
+    body: datae
+}).then(function(response) {
+    return response.json();
+  })
+  .then((myJson)=> {
+    this.props.setExportCode(myJson.hashedid)
+    this.props.setFinishExporting()
+  }).catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+      this.props.setExporting()
+this.props.changeValue(2)
+
+}
     contrast_setter=(event,value)=>{
       this.setState({
         contrast: value
@@ -61,6 +86,7 @@ class EditPage extends React.Component {
       .then((myJson)=> {
         theURL=this.props.link+myJson.url
         this.props.change(theURL)
+        this.props.setNewId(myJson.newid)
         this.props.setFinishLoading()
       }).catch(function (error) {
             // handle error
@@ -88,7 +114,7 @@ class EditPage extends React.Component {
 <SimpleSlider  min={-100} max={100} text="Contrast:" value={this.state.contrast} setter={this.contrast_setter} onDragEnd={()=>{this.updatephoto()}}/>
 <SimpleSlider  min={-100} max={100} text="Brightness:" value={this.state.brightness} setter={this.brightness_setter}  onDragEnd={()=>{this.updatephoto()}}/>
 <SimpleSlider min={0} max={100} text="Threshold:" value={this.state.threshold} setter={this.threshold_setter} onDragEnd={()=>{this.updatephoto()}}/>
-<Button variant="contained" color="primary" className='button'>
+<Button variant="contained" color="primary" className='button' onClick={this.exportPhoto}>
   Export to Auto Create
 </Button>
 </div>
