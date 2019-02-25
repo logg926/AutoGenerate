@@ -18,8 +18,8 @@ const styles = theme => ({
 });
 
 // const link = "http://127.0.0.1:5000/"
-// const link = "http://127.0.0.1:8000"
-const link = ""
+const link = "http://127.0.0.1:8000"
+// const link = ""
 
 class Window extends React.Component {
     constructor(props) {
@@ -48,7 +48,7 @@ class Window extends React.Component {
     }
 
     changeValue(value){
-        this.setState({value,modifyLoading: true})
+        this.setState({value})
 
     }
     startLoading(){

@@ -38,7 +38,7 @@ class SimpleSlider extends React.Component {
           aria-labelledby="label"
           onChange = {this.props.setter}
           onDragEnd ={this.props.onDragEnd}
-          onDragStop = {this.props.onDragEnd}
+          // onDragStop = {this.props.onDragEnd}
           min= {this.props.min}
           max={this.props.max}
         />
